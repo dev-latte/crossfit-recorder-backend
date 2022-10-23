@@ -7,9 +7,8 @@ import {
   Post,
   Put
 } from "@nestjs/common";
-import { CreateuserDTO } from "../dto/create-user.dto";
+import { CreateUserDTO } from "../dto/create-user.dto";
 import { UpdateUserDTO } from "../dto/update-user.dto";
-import { UserEntity } from "../models/user.entity";
 import { UserService } from "../services/user.service";
 
 @Controller("user")
@@ -17,12 +16,12 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Post()
-  create(@Body() userData: CreateuserDTO) {
+  create(@Body() userData: CreateUserDTO) {
     return this.userService.createUser(userData);
   }
 
   @Get()
-  findAll(): Promise<UserEntity[]> {
+  findAll() {
     return this.userService.findAllUsers();
   }
 

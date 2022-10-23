@@ -1,10 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { CreateuserDTO } from "../dto/create-user.dto";
+import { CreateUserDTO } from "../dto/create-user.dto";
 import { UpdateUserDTO } from "../dto/update-user.dto";
 import { UserEntity } from "../models/user.entity";
-import { User } from "../models/user.interface";
 
 @Injectable()
 export class UserService {
@@ -13,7 +12,7 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>
   ) {}
 
-  createUser(userData: CreateuserDTO) {
+  createUser(userData: CreateUserDTO) {
     return this.userRepository.save(userData);
   }
 
@@ -23,7 +22,7 @@ export class UserService {
     return users;
   }
 
-  findOneUser(id: number): Promise<UserEntity> {
+  findOneUser(id: number) {
     const user = this.userRepository.findOne({ where: { id } });
     if (!user) throw new NotFoundException(`Not found Data by Id : ${id}.`);
     return user;
