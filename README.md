@@ -71,3 +71,18 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## database
+
+PostgreSQL
+typeORM
+@nestjs/typeorm
+@nestjs/config
+@nestjs/mapped-types
+
+## for Validation Pipe
+
+class-validator
+class-transformer
+
+## etc
