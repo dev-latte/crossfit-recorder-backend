@@ -86,3 +86,5 @@ class-validator
 class-transformer
 
 ## etc
+
+@nestjs/swagger
