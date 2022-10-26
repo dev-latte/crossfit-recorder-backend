@@ -23,10 +23,10 @@ describe("UserController", () => {
             find: jest.fn(),
             findOne: jest.fn(),
             update: jest.fn(),
-            delete: jest.fn()
-          }
-        }
-      ]
+            delete: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<UserController>(UserController);

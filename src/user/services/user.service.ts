@@ -9,7 +9,7 @@ import { UserEntity } from "../models/user.entity";
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>
+    private readonly userRepository: Repository<UserEntity>,
   ) {}
 
   createUser(userData: CreateUserDTO) {
