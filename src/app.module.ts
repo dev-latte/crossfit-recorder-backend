@@ -17,11 +17,11 @@ import { UserModule } from "./user/user.module";
       database: process.env.POSTGRES_DATABASE,
       autoLoadEntities: true,
       synchronize: true,
-      logging: true
+      logging: true,
     }),
-    UserModule
+    UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [AppService],
 })
 export class AppModule {}
