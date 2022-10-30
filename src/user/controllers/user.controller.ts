@@ -11,7 +11,7 @@ import { CreateUserDTO } from "../dto/create-user.dto";
 import { UpdateUserDTO } from "../dto/update-user.dto";
 import { UserService } from "../services/user.service";
 
-@Controller("user")
+@Controller("users")
 export class UserController {
   constructor(private userService: UserService) {}
 
@@ -20,14 +20,19 @@ export class UserController {
     return this.userService.createUser(userData);
   }
 
-  @Get()
-  findAll() {
-    return this.userService.findAllUsers();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.userService.findAllUsers();
+  // }
 
-  @Get(":id")
-  findUser(@Param("id") id: number) {
-    return this.userService.findOneUser(id);
+  // @Get(":id")
+  // findUser(@Param("id") id: number) {
+  //   return this.userService.findOneUser(id);
+  // }
+
+  @Get(":email")
+  findUser(@Param("email") email: string) {
+    return this.userService.getByEmail(email);
   }
 
   @Put(":id")

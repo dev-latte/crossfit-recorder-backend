@@ -1,10 +1,12 @@
-import { IsNumber, IsString } from "class-validator";
+import { IsString } from "class-validator";
 
 export class CreateUserDTO {
   @IsString()
-  readonly name: string;
+  readonly userId: string;
   @IsString()
-  readonly boxCode: string;
-  @IsNumber()
-  readonly level: number;
+  readonly password: string;
+  @IsString()
+  readonly email: string;
+  @IsString()
+  readonly name: string;
 }

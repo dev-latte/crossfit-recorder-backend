@@ -88,3 +88,5 @@ class-transformer
 ## etc
 
 @nestjs/swagger
+bcrypt
+@types/bcrypt
