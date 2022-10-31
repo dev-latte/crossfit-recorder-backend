@@ -90,3 +90,15 @@ class-transformer
 @nestjs/swagger
 bcrypt
 @types/bcrypt
+
+## auth
+
+@nestjs/passport
+passport
+
+<!-- passport-local -->
+<!-- @types/passport-local -->
+
+@nestjs/jwt
+passport-jwt
+@types/passport-jwt

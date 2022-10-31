@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
+import { Role } from "./role.enum";
 
 @Entity("user")
 export class UserEntity {
@@ -8,16 +9,12 @@ export class UserEntity {
   id: number;
 
   @Column({ unique: true })
-  @ApiProperty({ description: "사용자 아이디" })
-  userId: string;
-
-  @Column()
-  @ApiProperty({ description: "사용자 비밀번호" })
-  password: string;
-
-  @Column({ unique: true })
   @ApiProperty({ description: "사용자 이메일" })
   email: string;
+
+  @Column({ select: false })
+  @ApiProperty({ description: "사용자 비밀번호" })
+  password: string;
 
   @Column({ default: "no_name" })
   @ApiProperty({ description: "사용자 이름" })
@@ -31,11 +28,6 @@ export class UserEntity {
   @ApiProperty({ description: "아이디 활성화 여부" })
   activation: boolean;
 
-  // @Column({ default: "" })
-  // @ApiProperty({ description: "소속 박스 코드" })
-  // boxCode: string;
-
-  // @Column({ default: 0 })
-  // @ApiProperty({ description: "크로스핏 레벨" })
-  // level: number;
+  @Column({ type: "enum", enum: Role, default: Role.USER })
+  role: Role;
 }
