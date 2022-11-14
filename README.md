@@ -102,3 +102,6 @@ passport
 @nestjs/jwt
 passport-jwt
 @types/passport-jwt
+
+cookie-parser
+@types/cookie-parser
