@@ -1,11 +1,15 @@
-import { Injectable } from "@nestjs/common";
-import { from, map, Observable, switchMap } from "rxjs";
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from "@nestjs/common";
 import { UserEntity } from "src/user/models/user.entity";
-import * as bcrypt from "bcrypt";
+import * as bcrypt from "../../utils/bcrypt.util";
 import { User } from "src/user/models/user.interface";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
 import { JwtService } from "@nestjs/jwt";
+import { Repository } from "typeorm";
+import { CreateUserDTO } from "src/user/dto/create-user.dto";
 
 @Injectable()
 export class AuthService {
@@ -15,61 +19,44 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  hashPassword(password: string): Observable<string> {
-    const genSalt = 10;
-    return from(bcrypt.hash(password, genSalt));
+  async validateUser(email: string, password: string): Promise<any> {
+    const user = await this.userRepository.findOne({
+      where: { email },
+      select: ["id", "email", "name", "password", "activation", "role"],
+    });
+    let hashValid: boolean;
+    await bcrypt
+      .isHashValid(password, user.password)
+      .then(el => (hashValid = el));
+    delete user.password;
+    return user && hashValid ? { ...user } : null;
   }
 
-  registerAccount(user: User): Observable<User> {
-    const { name, email, password } = user;
-
-    return this.hashPassword(password).pipe(
-      switchMap((hashedPassword: string) => {
-        return from(
-          this.userRepository.save({
-            name,
-            email,
-            password: hashedPassword,
-          }),
-        ).pipe(
-          map((user: User) => {
-            delete user.password;
-            return user;
-          }),
+  async registerAccount(userData: CreateUserDTO) {
+    const hashedPassword = await bcrypt.hash(userData.password);
+    try {
+      const createdUser = await this.userRepository.save({
+        ...userData,
+        password: hashedPassword,
+      });
+      delete createdUser.password;
+      return createdUser;
+    } catch (error) {
+      // 23505 : unique 위반 규칙
+      if (+error.code === 23505) {
+        throw new BadRequestException(
+          "사용자의 아이디 혹은 이메일이 이미 존재합니다.",
         );
-      }),
-    );
+      }
+      throw new InternalServerErrorException("알 수 없는 오류가 발생했습니다.");
+    }
   }
 
-  validateUser(email: string, password: string): Observable<User> {
-    return from(
-      this.userRepository.findOne({
-        where: { email },
-        select: ["id", "name", "password", "activation", "role"],
-      }),
-    ).pipe(
-      switchMap((user: User) =>
-        from(bcrypt.compare(password, user.password)).pipe(
-          map((isValidPassword: boolean) => {
-            if (isValidPassword) {
-              delete user.password;
-              return user;
-            }
-          }),
-        ),
-      ),
-    );
-  }
-
-  login(user: User): Observable<string> {
+  async login(user: User) {
     const { email, password } = user;
-    return this.validateUser(email, password).pipe(
-      switchMap((user: User) => {
-        if (user) {
-          // create JWT - credentials
-          return from(this.jwtService.signAsync({ user }));
-        }
-      }),
-    );
+    let result: any;
+    await this.validateUser(email, password).then(el => (result = el));
+    console.log("login>> ", result);
+    return { access_token: await this.jwtService.signAsync({ result }) };
   }
 }
